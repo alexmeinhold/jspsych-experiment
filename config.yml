@@ -1,4 +1,4 @@
-METAFILE: empty.yml
+METAFILE: text-toj.yml
 
 # Set to true if you want static asset revisioning, helpful for cache busting
 REVISIONING: false

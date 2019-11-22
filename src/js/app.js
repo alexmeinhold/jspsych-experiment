@@ -1,4 +1,4 @@
-import { createTimeline, getPreloadImagePaths } from "./experiments/empty";
+import { createTimeline, getPreloadImagePaths } from "./experiments/text-toj";
 
 if (typeof jatos != "undefined") {
   // Experiment is served by JATOS
