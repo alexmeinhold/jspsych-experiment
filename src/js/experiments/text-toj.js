@@ -1,70 +1,126 @@
 import "jspsych/plugins/jspsych-html-keyboard-response";
-import "jspsych/plugins/jspsych-fullscreen";
-import "../plugins/jspsych-toj-image";
+import { chooseRandomWord, randomPermutation } from "./helper.js";
+import words from "./words.json";
 
-export function createTimeline(jatosStudyInput = null) {
-  let timeline = [];
+const numberOfTrials = 10;
+const timeline = [];
 
-  console.log(jatosStudyInput);
+const welcome = {
+  type: "html-keyboard-response",
+  stimulus: "Welcome to the experiment. Press any key to begin."
+};
 
-  // Welcome screen
-  timeline.push({
-    type: "html-keyboard-response",
-    stimulus:
-      "<p>Thank you for taking the time to participate in WebTOJ!<p/>" +
-      "<p>Press any key to begin.</p>",
-  });
+timeline.push(welcome);
 
-  // Switch to fullscreen
-  timeline.push({
-    type: "fullscreen",
-    fullscreen_mode: true,
-  });
+for (let trial = 0; trial < numberOfTrials; trial++) {
+  const word = chooseRandomWord(words);
+  const shuffled_word = randomPermutation(word);
 
-  // Instructions
-  timeline.push({
-    type: "html-keyboard-response",
-    stimulus:
-      "<p>Some handy instruction text.</p>" + "<p>Press any key to start the experiment.</p>",
-  });
+  var fixation = {
+    type: 'html-keyboard-response',
+    stimulus: '<div style="font-size:60px;">+</div>',
+    choices: jsPsych.NO_KEYS,
+    trial_duration: 1000
+  }
 
-  // Generate trials
-  let factors = {
-    probe_image: ["images/gray.png"],
-    reference_image: ["images/gray.png"],
-    soa: [-10, -8, -5, -3, -2, -1, 0, 1, 2, 3, 5, 8, 10].map(x => x * 10),
-  };
-  let repetitions = 2;
-  let trials = jsPsych.randomization.factorial(factors, repetitions);
+  timeline.push(fixation);
 
-  // Create toj-image trial object
-  let toj = {
-    type: "toj-image",
-    probe_image: jsPsych.timelineVariable("probe_image"),
-    reference_image: jsPsych.timelineVariable("reference_image"),
-    soa: jsPsych.timelineVariable("soa"),
-    probe_properties: {
-      width: 100,
-      height: 100,
-      x: -200,
+  const showWords = {
+    type: 'html-keyboard-response',
+    stimulus: 
+    `<div style="
+          font-size:60px;
+          display:flex;
+          ">
+      <div style="margin-right:300px;">${word}</div>
+      <div>+</div>
+      <div style="margin-left:300px;">${shuffled_word}</div>
+    </div>`,
+    trial_duration: 400
+  }
+  
+  timeline.push(showWords);
+  
+  var blinkLeft = {
+    type: 'html-keyboard-response',
+    stimulus: 
+    `<div style="
+          font-size:60px;
+          display:flex;
+          ">
+      <div style="margin-right:300px;color:rgb(130,130,130);">${word}</div>
+      <div>+</div>
+      <div style="margin-left:300px;">${shuffled_word}</div>
+    </div>`,
+    trial_duration: 50
+  }
+  
+  timeline.push(blinkLeft);
+
+  var pause = {
+    type: 'html-keyboard-response',
+    stimulus: 
+    `<div style="
+          font-size:60px;
+          display:flex;
+          ">
+      <div style="margin-right:300px;">${word}</div>
+      <div>+</div>
+      <div style="margin-left:300px;">${shuffled_word}</div>
+    </div>`,
+    trial_duration: 0
+  }
+  
+  timeline.push(pause);
+
+
+  var blinkRight = {
+    type: 'html-keyboard-response',
+    stimulus: 
+    `<div style="
+          font-size:60px;
+          display:flex;
+          ">
+      <div style="margin-right:300px;">${word}</div>
+      <div>+</div>
+      <div style="margin-left:300px;color:rgb(130,130,130);">${shuffled_word}</div>
+    </div>`,
+    trial_duration: 50
+  }
+  
+  timeline.push(blinkRight);
+
+
+  const waitForUser = {
+    type: 'html-keyboard-response',
+    stimulus: 
+    `<div style="
+          font-size:60px;
+          display:flex;
+          ">
+      <div style="margin-right:300px;">${word}</div>
+      <div>+</div>
+      <div style="margin-left:300px;">${shuffled_word}</div>
+    </div>`,
+    choices: ['f', 'j'],
+    on_finish: function(data) {
+      if (data.key_press == 70) {
+        // keycode of f is 70
+        data.correct = true;
+        console.log('correct');
+      } else {
+        data.correct = false;
+        console.log('not correct');
+      }
     },
-    reference_properties: {
-      width: 100,
-      height: 100,
-      x: 200,
-    },
-    probe_key: "tab",
-    reference_key: "enter",
-  };
-
-  timeline.push({
-    timeline: [toj],
-    timeline_variables: trials,
-  });
-
-  return timeline;
+  }
+  
+  timeline.push(waitForUser);
 }
 
-export function getPreloadImagePaths() {
-  return [];
-}
+jsPsych.init({
+  timeline: timeline,
+  on_finish: function() {
+    jsPsych.data.displayData();
+  }
+});
