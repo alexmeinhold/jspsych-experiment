@@ -1,17 +1,14 @@
-function permute(word) {
-  var permutations = [];
+function permuteWord(word) {
+  const permutations = [];
 
   if (word.length == 1) return [word];
-  if (word.length == 2) return [word, word[1]+word[0]];
+  if (word.length == 2) return [word, word[1] + word[0]];
 
-  word.split('').forEach(function (chr, idx, arr) {
-    var sub = [].concat(arr);
-    sub.splice(idx, 1);
-    permute(sub.join('')).forEach(function (perm) {
-      permutations.push(chr+perm);
-    });
+  word.split('').forEach((character, _, array) => {
+    const otherChars = array.filter(item => item != character);
+    return permuteWord(otherChars.join('')).forEach(permutation => permutations.push(character + permutation));
   });
-
+  
   return permutations;
 }
 
@@ -21,6 +18,6 @@ export function chooseRandomWord(wordList) {
 }
 
 export function randomPermutation(word) {
-  var permutations = permute(word);
+  var permutations = permuteWord(word);
   return chooseRandomWord(permutations);
 }
