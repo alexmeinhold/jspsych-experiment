@@ -12,12 +12,21 @@ function permuteWord(word) {
   return permutations;
 }
 
-export function chooseRandomWord(wordList) {
-  var index = Math.floor(Math.random() * wordList.length);
-  return wordList[index];
+export function chooseRandomElement(array) {
+  var index = Math.floor(Math.random() * array.length);
+  return array[index];
 }
 
 export function randomPermutation(word) {
   var permutations = permuteWord(word);
-  return chooseRandomWord(permutations);
+  return chooseRandomElement(permutations);
+}
+
+export function shuffleArray(array) {
+  // https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+  for (let i = array.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array
 }
