@@ -96,7 +96,7 @@ function renderWords(firstWord, secondWord, blinking) {
             display:flex;
             ">
             <div style="margin-right:300px;${(blinking === 'left') ? 'color:rgb(130,130,130);' : ''}">${firstWord}</div>
-            <div>+</div>
+            <div class="fixation">+</div>
             <div style="margin-left:300px;${(blinking === 'right') ? 'color:rgb(130,130,130);' : ''}">${secondWord}</div>
           </div>`;
 }
