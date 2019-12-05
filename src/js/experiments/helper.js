@@ -12,6 +12,15 @@ function permuteWord(word) {
   return permutations;
 }
 
+/* TODO:
+ * - Problem mit doppelten Buchstaben?
+ *
+ * 
+ * 
+ * 
+ * 
+ */
+
 export function chooseRandomElement(array) {
   var index = Math.floor(Math.random() * array.length);
   return array[index];
