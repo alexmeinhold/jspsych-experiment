@@ -1,25 +1,18 @@
 function permuteWord(word) {
+  // https://gist.github.com/customcommander/e9af9da584ff3a33f5ed
   const permutations = [];
 
   if (word.length == 1) return [word];
   if (word.length == 2) return [word, word[1] + word[0]];
 
-  word.split('').forEach((character, _, array) => {
-    const otherChars = array.filter(item => item != character);
+  word.split('').forEach((character, index, array) => {
+    const otherChars = [...array];
+    otherChars.splice(index, 1);
     return permuteWord(otherChars.join('')).forEach(permutation => permutations.push(character + permutation));
   });
   
   return permutations;
 }
-
-/* TODO:
- * - Problem mit doppelten Buchstaben?
- *
- * 
- * 
- * 
- * 
- */
 
 export function chooseRandomElement(array) {
   var index = Math.floor(Math.random() * array.length);
