@@ -1,102 +1,170 @@
 import "jspsych/plugins/jspsych-html-keyboard-response";
-import { chooseRandomElement, randomPermutation, shuffleArray } from "./helper.js";
+import "jspsych/plugins/jspsych-survey-text";
+import "jspsych/plugins/jspsych-fullscreen";
+import { TojPlugin } from "../plugins/jspsych-toj";
+import tojPlugin from "../plugins/jspsych-toj";
+
+import { Scaler } from "../util/Scaler";
+import { setAbsolutePosition } from "../util/positioning";
+
+import { chooseRandomElement, randomPermutation } from "./helper.js";
 import wordList from "./words.json";
 
-const numberOfTrials = 10;
-const soaValues = [-100, -80, -50, -30, -20, -10, 0, 10, 20, 30, 50, 80, 100].map(x => x + 100).map(x => x/2);
+
 const readingDuration = 400;
-const blinkingDuration = 100;
+const leftKey = "f";
+const rightKey = "j";
 
-export function createTimeline() {
-  const timeline = [];
+function generateWords() {
+  const word = chooseRandomElement(wordList).toUpperCase();
+  const shuffledWord = randomPermutation(word).toUpperCase();
+  const probeElement = document.createElement('div');
+  probeElement.innerHTML = word;
+  const referenceElement = document.createElement('div');
+  referenceElement.innerHTML = shuffledWord;
+  return [probeElement, referenceElement];
+}
 
-  const welcome = {
+export function createTimeline(jatosStudyInput = null) {
+  let timeline = [];
+
+  // timeline.push({
+  //   type: "survey-text",
+  //   questions: [{ prompt: "Please enter your subject number." }],
+  //   data: {
+  //     userAgent: navigator.userAgent,
+  //   },
+  // });
+
+  // Switch to fullscreen
+  timeline.push({
+    type: "fullscreen",
+    fullscreen_mode: true,
+  });
+
+  // Instructions
+  timeline.push({
     type: "html-keyboard-response",
-    stimulus: "Welcome to the experiment. Press any key to begin."
+    stimulus:
+      "<p>Sie sehen gleich ein Muster aus farbigen Strichen.<br/>" +
+      "Zwei sind etwas größer als die anderen und werden kurz blinken.<br/>" +
+      "Bitte beurteilen Sie, welcher zuerst geblinkt hat.</p>" +
+      "<p>War es der linke, drücken Sie die Taste <b>F</b>.<br/>" +
+      "Falls der rechte zuerst geblinkt hat, drücken Sie die Taste <b>J</b>.</p>" +
+      "<p>Versuchen Sie, genau zu sein und keine Fehler zu machen. " +
+      "Wenn Sie nicht wissen, wer zuerst war, raten Sie.</p>" +
+      "<p>Press any key to start the experiment.</p>"
+  });
+
+  // Generate trials
+  const factors = {
+    probeLeft: [true, false],
+    salient: [true, false],
+    soa: [-150, -100, -50, 0, 50, 100, 150]
+  };
+  const repetitions = 1;
+  let trials = jsPsych.randomization.factorial(factors, repetitions);
+
+  let scaler; // Will store the Scaler object for the TOJ plugin
+
+  // Create TOJ plugin trial object
+  const toj = {
+    type: "toj",
+    modification_function: element => TojPlugin.flashElement(element, "toj-flash", 30),
+    soa: jsPsych.timelineVariable("soa"),
+    probe_key: () => (jsPsych.timelineVariable("probeLeft", true) ? leftKey : rightKey),
+    reference_key: () => (jsPsych.timelineVariable("probeLeft", true) ? rightKey : leftKey),
+    on_start: trial => {
+      const probeLeft = jsPsych.timelineVariable("probeLeft", true);
+      const salient = jsPsych.timelineVariable("salient", true);
+
+      // Log probeLeft, salient and condition
+      trial.data = {
+        probeLeft,
+        salient
+      };
+
+      trial.fixation_time = readingDuration;
+
+      const [probeElement, referenceElement] = generateWords();
+
+      trial.probe_element = probeElement;
+      trial.reference_element = referenceElement;
+      
+      tojPlugin.appendElement(probeElement);
+      tojPlugin.appendElement(referenceElement);
+
+      setAbsolutePosition(probeElement, (probeLeft ? -1 : 1) * 140);
+      setAbsolutePosition(referenceElement, (probeLeft ? 1 : -1) * 140);
+    },
+
+    on_load: () => {
+      // Fit to window size
+      scaler = new Scaler(
+        document.getElementById("jspsych-toj-container"),
+        400,
+        400,
+        0
+      );
+    },
+
+    on_finish: () => {
+      scaler.destruct();
+    },
   };
 
-  timeline.push(welcome);
+  // Create TOJ timelines
+  const tutorialTojTimeline = {
+    timeline: [toj],
+    timeline_variables: trials.slice(0, 10),
+    randomize_order: true,
+  };
 
-  for (let trial = 0; trial < numberOfTrials; trial++) {
-    const word = chooseRandomElement(wordList);
-    const shuffledWord = randomPermutation(word);
-    const words = shuffleArray([word, shuffledWord]);
-    const blinkingOrder = shuffleArray(['left', 'right'])
+  const experimentTojTimeline = {
+    timeline: [toj],
+    timeline_variables: trials,
+    randomize_order: true,
+  };
 
-    var fixation = {
-      type: 'html-keyboard-response',
-      stimulus: '<div style="font-size:60px;">+</div>',
-      choices: jsPsych.NO_KEYS,
-      trial_duration: 200
+  // Generator function to create timeline variables for blocks
+  const blockGenerator = function*(blockCount) {
+    let currentBlock = 1;
+    while (currentBlock <= blockCount) {
+      yield { block: currentBlock, blockCount };
+      currentBlock += 1;
     }
-    
-    timeline.push(fixation);
+  };
 
-    const showWords = {
-      type: 'html-keyboard-response',
-      stimulus: renderWords(words[0], words[1]),
-      trial_duration: readingDuration
-    }
-    
-    timeline.push(showWords);
-    
-    var blinkFirst = {
-      type: 'html-keyboard-response',
-      stimulus: renderWords(words[0], words[1], blinkingOrder[0]),
-      trial_duration: blinkingDuration
-    }
-          
-    timeline.push(blinkFirst);
+  const tutorialFinishedScreen = {
+    type: "html-keyboard-response",
+    stimulus: "<p>You finished the tutorial.</p><p>Press any key to continue.</p>"
+  };
 
-    var soaPause = {
-      type: 'html-keyboard-response',
-      stimulus: renderWords(words[0], words[1]),
-      trial_duration: Math.max(0, chooseRandomElement(soaValues) - blinkingDuration)
+  const blockFinishedScreen = {
+    type: "html-keyboard-response",
+    stimulus: () => {
+      const block = jsPsych.timelineVariable("block", true);
+      const blockCount = jsPsych.timelineVariable("blockCount", true);
+      if (block < blockCount) {
+        return `<p>You finished block ${block} of ${blockCount}.<p/><p>Press any key to continue.</p>`;
+      } else {
+        return "<p>This part of the experiment is finished. Press any key to save the results!</p>";
+      }
     }
+  };
 
-    timeline.push(soaPause);
+  // Add tutorial to main timeline
+  timeline.push(tutorialTojTimeline, tutorialFinishedScreen);
 
-    var blinkSecond = {
-      type: 'html-keyboard-response',
-      stimulus: renderWords(words[0], words[1], blinkingOrder[1]),
-      trial_duration: blinkingDuration
-    }
-    
-    timeline.push(blinkSecond);
-    
-    const waitForUser = {
-      type: 'html-keyboard-response',
-      stimulus: renderWords(words[0], words[1]),
-      choices: ['f', 'j'],
-      on_finish: function(data) {
-        const firstToBlink = blinkingOrder[0];
-        if (data.key_press == 70 && firstToBlink == 'left' || data.key_press == 74 && firstToBlink == 'right') {
-          // keycode of f is 70, keycode of j is 74
-          data.correct = true;
-          console.log('correct');
-        } else {
-          data.correct = false;
-          console.log('not correct')
-        }
-      },
-    }
-    
-    timeline.push(waitForUser);
-  }
+  // Add experiment blocks to main timeline
+  timeline.push({
+    timeline: [experimentTojTimeline, blockFinishedScreen],
+    timeline_variables: Array.from(blockGenerator(1)),
+  });
+
   return timeline;
 }
 
 export function getPreloadImagePaths() {
   return [];
-}
-
-function renderWords(firstWord, secondWord, blinking) {
-  return `<div style="
-            font-size:60px;
-            display:flex;
-            ">
-            <div style="margin-right:150px;${(blinking === 'left') ? 'color:rgb(130,130,130);' : ''}">${firstWord.toUpperCase()}</div>
-            <div class="fixation">+</div>
-            <div style="margin-left:150px;${(blinking === 'right') ? 'color:rgb(130,130,130);' : ''}">${secondWord.toUpperCase()}</div>
-          </div>`;
 }
