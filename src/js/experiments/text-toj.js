@@ -46,14 +46,22 @@ export function createTimeline(jatosStudyInput = null) {
   timeline.push({
     type: "html-keyboard-response",
     stimulus:
-      "<p>Sie sehen gleich ein Muster aus farbigen Strichen.<br/>" +
-      "Zwei sind etwas größer als die anderen und werden kurz blinken.<br/>" +
-      "Bitte beurteilen Sie, welcher zuerst geblinkt hat.</p>" +
-      "<p>War es der linke, drücken Sie die Taste <b>F</b>.<br/>" +
-      "Falls der rechte zuerst geblinkt hat, drücken Sie die Taste <b>J</b>.</p>" +
-      "<p>Versuchen Sie, genau zu sein und keine Fehler zu machen. " +
-      "Wenn Sie nicht wissen, wer zuerst war, raten Sie.</p>" +
-      "<p>Press any key to start the experiment.</p>"
+    `
+      <p style="text-align: center;"><strong>Wilkommen zum Experiement.</strong></p>
+      <p>Bevor Sie das Experiment fortf&uuml;hren k&ouml;nnen, fragen sie sich, ob Sie die drei unteren Fragen bejaht beantworten k&ouml;nnen.</p>
+      <ol>
+      <li>Sind Sie in einer Umgebung, wo sie ungest&ouml;rt f&uuml;r [X] Minuten an dem Experiment teilnehmen k&ouml;nnen ?</li>
+      <li>Haben Sie elektronische Ger&auml;te, au&szlig;er das Ger&auml;t an dem Sie gerade Teilnehmen, ausgeschaltet oder in den Flugmodus gestellt ?</li>
+      <li>F&uuml;hlen Sie sich momentan wohl ?</li>
+      </ol>
+      <p>Selbstverst&auml;ndlich ist ihnen &uuml;berlassen, das Experiement aufgrund von Unwohlseiens jederzeit abzubrechen.</p>
+      <p>W&auml;hrend des Experimentes wird auf der Mitte des Bildes ein schwarzes Kreis angezeigt werden. F&uuml;r die Dauer des Experimentes fokussieren sie diesen. Neben dem Kreis, also rehts und links, wird jeweils ein Wort eingeblendet. Nach einer gewissen Zeit blinken beide W&ouml;rter auf. Sie sollen nun entscheiden, welches Wort zuerst gelinkt hat.</p>
+      <ul>
+      <li>F&uuml;r das rechte Wort dr&uuml;cken sie <strong>f</strong></li>
+      <li>F&uuml;r das linke Wort dr&uuml;cken sie <strong>j</strong></li>
+      </ul>
+      <p><em>Beide Tasten haben jeweils eine Einkerbung, an welcher sie sich orientieren k&ouml;nnen.</em></p>
+    `
   });
 
   // Generate trials
