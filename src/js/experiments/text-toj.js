@@ -10,8 +10,9 @@ import { setAbsolutePosition } from "../util/positioning";
 import { chooseRandomElement, randomPermutation } from "./helper.js";
 import wordList from "./words.json";
 
-
 const readingDuration = 400;
+const blockAmount = 5;
+
 const leftKey = "f";
 const rightKey = "j";
 
@@ -28,13 +29,13 @@ function generateWords() {
 export function createTimeline(jatosStudyInput = null) {
   let timeline = [];
 
-  // timeline.push({
-  //   type: "survey-text",
-  //   questions: [{ prompt: "Please enter your subject number." }],
-  //   data: {
-  //     userAgent: navigator.userAgent,
-  //   },
-  // });
+  timeline.push({
+    type: "survey-text",
+    questions: [{ prompt: "Please enter your subject number." }],
+    data: {
+      userAgent: navigator.userAgent,
+    },
+  });
 
   // Switch to fullscreen
   timeline.push({
@@ -167,7 +168,7 @@ export function createTimeline(jatosStudyInput = null) {
   // Add experiment blocks to main timeline
   timeline.push({
     timeline: [experimentTojTimeline, blockFinishedScreen],
-    timeline_variables: Array.from(blockGenerator(1)),
+    timeline_variables: Array.from(blockGenerator(blockAmount)),
   });
 
   return timeline;
