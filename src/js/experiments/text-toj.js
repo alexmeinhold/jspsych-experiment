@@ -47,20 +47,20 @@ export function createTimeline(jatosStudyInput = null) {
     type: "html-keyboard-response",
     stimulus:
     `
-      <p style="text-align: center;"><strong>Wilkommen zum Experiement.</strong></p>
-      <p>Bevor Sie das Experiment fortf&uuml;hren k&ouml;nnen, fragen sie sich, ob Sie die drei unteren Fragen bejaht beantworten k&ouml;nnen.</p>
+      <p style="text-align: center;"><strong>Willkommen zum Experiment.</strong></p>
+      <p>Bevor Sie das Experiment fortf&uuml;hren k&ouml;nnen, fragen Sie sich, ob Sie die drei unteren Fragen bejaht beantworten k&ouml;nnen.</p>
       <ol>
-      <li>Sind Sie in einer Umgebung, wo sie ungest&ouml;rt f&uuml;r [X] Minuten an dem Experiment teilnehmen k&ouml;nnen ?</li>
-      <li>Haben Sie elektronische Ger&auml;te, au&szlig;er das Ger&auml;t an dem Sie gerade Teilnehmen, ausgeschaltet oder in den Flugmodus gestellt ?</li>
-      <li>F&uuml;hlen Sie sich momentan wohl ?</li>
+      <li>Sind Sie in einer Umgebung, in der Sie ungest&ouml;rt f&uuml;r [X] Minuten an dem Experiment teilnehmen k&ouml;nnen?</li>
+      <li>Haben Sie elektronische Ger&auml;te, au&szlig;er das Ger&auml;t an dem Sie gerade teilnehmen, ausgeschaltet oder in den Flugmodus gestellt?</li>
+      <li>F&uuml;hlen Sie sich momentan wohl?</li>
       </ol>
-      <p>Selbstverst&auml;ndlich ist ihnen &uuml;berlassen, das Experiement aufgrund von Unwohlseiens jederzeit abzubrechen.</p>
-      <p>W&auml;hrend des Experimentes wird auf der Mitte des Bildes ein schwarzes Kreis angezeigt werden. F&uuml;r die Dauer des Experimentes fokussieren sie diesen. Neben dem Kreis, also rehts und links, wird jeweils ein Wort eingeblendet. Nach einer gewissen Zeit blinken beide W&ouml;rter auf. Sie sollen nun entscheiden, welches Wort zuerst gelinkt hat.</p>
-      <ul>
-      <li>F&uuml;r das rechte Wort dr&uuml;cken sie <strong>f</strong></li>
-      <li>F&uuml;r das linke Wort dr&uuml;cken sie <strong>j</strong></li>
+      <p>Selbstverst&auml;ndlich ist ihnen &uuml;berlassen, das Experiement aufgrund von Unwohlseins jederzeit abzubrechen.</p>
+      <p>W&auml;hrend des Experiments wird in der Mitte des Browserfensters ein schwarzer Kreis angezeigt werden. F&uuml;r die Dauer des Experimentes fokussieren Sie diesen. Neben dem Kreis, also rechts und links, wird jeweils ein Wort eingeblendet. Nach einer gewissen Zeit blinken beide W&ouml;rter auf. Sie sollen nun entscheiden, welches Wort zuerst gelinkt hat.</p>
+      <ul style="list-style: none;">
+      <li>F&uuml;r das linke Wort dr&uuml;cken Sie <strong>F</strong></li>
+      <li>F&uuml;r das rechte Wort dr&uuml;cken Sie <strong>J</strong></li>
       </ul>
-      <p><em>Beide Tasten haben jeweils eine Einkerbung, an welcher sie sich orientieren k&ouml;nnen.</em></p>
+      <p><em>Beide Tasten haben jeweils eine Einkerbung, an welcher Sie sich orientieren k&ouml;nnen.</em></p>
     `
   });
 
