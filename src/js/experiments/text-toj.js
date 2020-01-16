@@ -10,7 +10,7 @@ import { setAbsolutePosition } from "../util/positioning";
 import { chooseRandomElement, randomPermutation } from "./helper.js";
 import wordList from "./words.json";
 
-const readingDuration = 400;
+const readingDuration = 700;
 const blockAmount = 5;
 
 const leftKey = "f";
@@ -103,8 +103,8 @@ export function createTimeline(jatosStudyInput = null) {
       tojPlugin.appendElement(probeElement);
       tojPlugin.appendElement(referenceElement);
 
-      setAbsolutePosition(probeElement, (probeLeft ? -1 : 1) * 140);
-      setAbsolutePosition(referenceElement, (probeLeft ? 1 : -1) * 140);
+      setAbsolutePosition(probeElement,0 , (probeLeft ? -1 : 1) * 20);
+      setAbsolutePosition(referenceElement,0 , (probeLeft ? 1 : -1) * 20);
     },
 
     on_load: () => {
