@@ -58,8 +58,8 @@ export function createTimeline(jatosStudyInput = null) {
       <p>Selbstverst&auml;ndlich ist ihnen &uuml;berlassen, das Experiement aufgrund von Unwohlseins jederzeit abzubrechen.</p>
       <p>W&auml;hrend des Experiments wird in der Mitte des Browserfensters ein schwarzer Kreis angezeigt werden. F&uuml;r die Dauer des Experimentes fokussieren Sie diesen. Neben dem Kreis, also rechts und links, wird jeweils ein Wort eingeblendet. Nach einer gewissen Zeit blinken beide W&ouml;rter auf. Sie sollen nun entscheiden, welches Wort zuerst geblinkt hat.</p>
       <ul style="list-style: none;">
-      <li>F&uuml;r das linke Wort dr&uuml;cken Sie <strong>F</strong></li>
-      <li>F&uuml;r das rechte Wort dr&uuml;cken Sie <strong>J</strong></li>
+      <li>F&uuml;r das linke (untere) Wort dr&uuml;cken Sie <strong>F</strong></li>
+      <li>F&uuml;r das rechte (obere) Wort dr&uuml;cken Sie <strong>J</strong></li>
       </ul>
       <p><em>Beide Tasten haben jeweils eine Einkerbung, an welcher Sie sich orientieren k&ouml;nnen.</em></p>
     `
