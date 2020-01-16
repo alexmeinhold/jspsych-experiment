@@ -13,8 +13,8 @@ import wordList from "./words.json";
 const readingDuration = 700;
 const blockAmount = 5;
 
-const leftKey = "f";
-const rightKey = "j";
+const leftKey = "u";
+const rightKey = "v";
 
 function generateWords() {
   const word = chooseRandomElement(wordList).toUpperCase();
