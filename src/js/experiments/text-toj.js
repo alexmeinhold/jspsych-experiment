@@ -10,7 +10,7 @@ import { setAbsolutePosition } from "../util/positioning";
 import { chooseRandomElement, randomPermutation } from "./helper.js";
 import wordList from "./words.json";
 
-const readingDuration = 800;
+const readingDuration = 700;
 const blockAmount = 5;
 
 const leftKey = "f";
