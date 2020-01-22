@@ -8,20 +8,25 @@ function permuteWord(word) {
   word.split('').forEach((character, index, array) => {
     const otherChars = [...array];
     otherChars.splice(index, 1);
-    return permuteWord(otherChars.join('')).forEach(permutation => permutations.push(character + permutation));
+    return permuteWord(otherChars.join(''))
+        .forEach(permutation => permutations.push(character + permutation));
   });
-  
+
   return permutations;
 }
 
 export function chooseRandomElement(array) {
-  var index = Math.floor(Math.random() * array.length);
+  const index = Math.floor(Math.random() * array.length);
   return array[index];
 }
 
 export function randomPermutation(word) {
-  var permutations = permuteWord(word);
-  return chooseRandomElement(permutations);
+  const permutations = permuteWord(word);
+  let randomWord;
+  do {
+    randomWord = chooseRandomElement(permutations);
+  } while (hammingDistance(word, randomWord) < 3);
+  return randomWord;
 }
 
 export function shuffleArray(array) {
@@ -30,5 +35,18 @@ export function shuffleArray(array) {
     let j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
   }
-  return array
+  return array;
+}
+
+function hammingDistance(firstWord, secondWord) {
+  // lets assume both words have the same length
+  let index = 0;
+  let distance = 0;
+
+  while (index < firstWord.length && index < secondWord.length) {
+    if (firstWord[index] !== secondWord[index]) distance++;
+    index++;
+  }
+
+  return distance;
 }
