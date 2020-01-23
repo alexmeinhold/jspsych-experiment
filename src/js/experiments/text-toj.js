@@ -11,7 +11,7 @@ import { chooseRandomElement, randomPermutation } from "./helper.js";
 import wordList from "./words.json";
 
 const readingDuration = 700;
-const blockAmount = 5;
+const blockAmount = 8;
 
 const leftKey = "u";
 const rightKey = "v";
@@ -19,9 +19,9 @@ const rightKey = "v";
 function generateWords() {
   const word = chooseRandomElement(wordList).toUpperCase();
   const shuffledWord = randomPermutation(word).toUpperCase();
-  const probeElement = document.createElement('div');
+  const probeElement = document.createElement("div");
   probeElement.innerHTML = word;
-  const referenceElement = document.createElement('div');
+  const referenceElement = document.createElement("div");
   referenceElement.innerHTML = shuffledWord;
   return [probeElement, referenceElement];
 }
@@ -46,8 +46,7 @@ export function createTimeline(jatosStudyInput = null) {
   // Instructions
   timeline.push({
     type: "html-keyboard-response",
-    stimulus:
-    `
+    stimulus: `
       <p style="text-align: center;"><strong>Willkommen zum Experiment.</strong></p>
       <p>Bevor Sie das Experiment fortf&uuml;hren k&ouml;nnen, fragen Sie sich, ob Sie die drei unteren Fragen bejaht beantworten k&ouml;nnen.</p>
       <ol>
@@ -62,14 +61,14 @@ export function createTimeline(jatosStudyInput = null) {
       <li>F&uuml;r das untere Wort dr&uuml;cken Sie <strong>V</strong></li>
       </ul>
       <p><em>Beide Tasten haben jeweils eine Einkerbung, an welcher Sie sich orientieren k&ouml;nnen.</em></p>
-    `
+    `,
   });
 
   // Generate trials
   const factors = {
     probeLeft: [true, false],
     salient: [true, false],
-    soa: [-150, -100, -50, 0, 50, 100, 150]
+    soa: [-150, -100, -50, 0, 50, 100, 150],
   };
   const repetitions = 1;
   let trials = jsPsych.randomization.factorial(factors, repetitions);
@@ -90,7 +89,7 @@ export function createTimeline(jatosStudyInput = null) {
       // Log probeLeft, salient and condition
       trial.data = {
         probeLeft,
-        salient
+        salient,
       };
 
       trial.fixation_time = readingDuration;
@@ -99,22 +98,17 @@ export function createTimeline(jatosStudyInput = null) {
 
       trial.probe_element = probeElement;
       trial.reference_element = referenceElement;
-      
+
       tojPlugin.appendElement(probeElement);
       tojPlugin.appendElement(referenceElement);
 
-      setAbsolutePosition(probeElement,0 , (probeLeft ? -1 : 1) * 20);
-      setAbsolutePosition(referenceElement,0 , (probeLeft ? 1 : -1) * 20);
+      setAbsolutePosition(probeElement, 0, (probeLeft ? -1 : 1) * 20);
+      setAbsolutePosition(referenceElement, 0, (probeLeft ? 1 : -1) * 20);
     },
 
     on_load: () => {
       // Fit to window size
-      scaler = new Scaler(
-        document.getElementById("jspsych-toj-container"),
-        400,
-        400,
-        0
-      );
+      scaler = new Scaler(document.getElementById("jspsych-toj-container"), 400, 400, 0);
     },
 
     on_finish: () => {
@@ -146,7 +140,7 @@ export function createTimeline(jatosStudyInput = null) {
 
   const tutorialFinishedScreen = {
     type: "html-keyboard-response",
-    stimulus: "<p>You finished the tutorial.</p><p>Press any key to continue.</p>"
+    stimulus: "<p>You finished the tutorial.</p><p>Press any key to continue.</p>",
   };
 
   const blockFinishedScreen = {
@@ -159,7 +153,7 @@ export function createTimeline(jatosStudyInput = null) {
       } else {
         return "<p>This part of the experiment is finished. Press any key to save the results!</p>";
       }
-    }
+    },
   };
 
   // Add tutorial to main timeline
