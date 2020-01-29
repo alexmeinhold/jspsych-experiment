@@ -4,3 +4,4 @@ packaged/
 .vscode/
 env/
 *.pickle
+.DS_Store
